@@ -1,0 +1,23 @@
+[package]
+name = "devicectrl-keyboard"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = { version = "1.0.97", features = ["backtrace"] }
+evdev = { version = "0.13.1", features = ["tokio"] }
+futures = "0.3.31"
+devicectrl-common = { git = "https://github.com/MatthewCash/devicectrl-common", features = [
+    "alloc",
+] }
+log = "0.4.26"
+notify = "8.0.0"
+sd-notify = "0.4.5"
+serde = "1.0.219"
+serde_derive = "1.0.219"
+serde_json = "1.0.140"
+tokio = { version = "1.44.0", features = ["full"] }
+tokio-rustls = "0.26.2"
+tokio-util = { version = "0.7.15", features = ["codec"] }
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+socket2 = "0.6.0"
