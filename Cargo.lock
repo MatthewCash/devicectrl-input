@@ -196,7 +196,7 @@ dependencies = [
 [[package]]
 name = "devicectrl-common"
 version = "0.1.0"
-source = "git+https://github.com/MatthewCash/devicectrl-common#0cde9fed83311ed144470beacb9b5c4011caeb6a"
+source = "git+https://github.com/MatthewCash/devicectrl-common#f5ee6684bba3b59d30bbaef162f3815c839774a1"
 dependencies = [
  "anyhow",
  "arrayvec",

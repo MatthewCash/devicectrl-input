@@ -1,10 +1,9 @@
 use anyhow::{Context, Result, anyhow};
 use devicectrl_common::UpdateRequest;
 use evdev::{Device, KeyCode};
+use notify::{EventKind, RecommendedWatcher, RecursiveMode, Watcher, event::CreateKind};
 use std::{path::Path, sync::Arc};
 use tokio::sync::mpsc;
-
-use notify::{EventKind, RecommendedWatcher, RecursiveMode, Watcher, event::CreateKind};
 
 use crate::config::Config;
 
@@ -22,13 +21,7 @@ pub async fn listen_events(
     log::info!("Listening for events on [{name}]");
 
     loop {
-        let event = match events.next_event().await {
-            Ok(event) => event,
-            Err(err) => {
-                log::error!("Failed to handle event: {err:?}");
-                return Ok(());
-            }
-        };
+        let event = events.next_event().await?;
 
         if event.value() != 1 {
             continue;

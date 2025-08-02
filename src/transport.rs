@@ -1,11 +1,10 @@
-use std::{net::SocketAddr, sync::Arc, time::Duration};
-
 use anyhow::{Context, Result};
 use devicectrl_common::{UpdateRequest, protocol::tcp::ServerBoundTcpMessage};
 use futures::{SinkExt, TryStreamExt};
 use serde::{Deserialize, de};
 use serde_derive::Deserialize;
 use socket2::{SockRef, TcpKeepalive};
+use std::{net::SocketAddr, sync::Arc, time::Duration};
 use tokio::{net::TcpStream, select, sync::mpsc, time::sleep};
 use tokio_rustls::{
     TlsConnector,

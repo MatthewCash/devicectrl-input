@@ -1,8 +1,7 @@
 use anyhow::{Context, Result};
 use devicectrl_common::UpdateRequest;
-use std::{env, path::PathBuf, sync::Arc};
-
 use sd_notify::NotifyState;
+use std::{env, path::PathBuf, sync::Arc};
 use tokio::{sync::mpsc, task::JoinSet};
 use tracing_subscriber::{EnvFilter, filter::LevelFilter};
 
