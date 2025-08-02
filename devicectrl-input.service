@@ -1,0 +1,15 @@
+[Unit]
+Description=devicectrl input client
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=notify
+
+Environment=CONFIG_PATH=/etc/devicectrl-input/config.json
+ExecStart=/usr/local/bin/devicectrl-input
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
