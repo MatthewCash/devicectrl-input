@@ -1,16 +1,15 @@
 use anyhow::{Context, Result, anyhow};
-use devicectrl_common::UpdateRequest;
 use evdev::{Device, KeyCode};
 use notify::{EventKind, RecommendedWatcher, RecursiveMode, Watcher, event::CreateKind};
 use std::{path::Path, sync::Arc};
 use tokio::sync::mpsc;
 
-use crate::config::Config;
+use crate::config::{Action, Config};
 
 pub async fn listen_events(
     device: Device,
     config: Arc<Config>,
-    update_sender: mpsc::Sender<UpdateRequest>,
+    update_sender: mpsc::Sender<Action>,
 ) -> Result<()> {
     let name = device.name().unwrap_or("unknown").to_owned();
 
@@ -58,7 +57,7 @@ pub async fn listen_events(
 
 pub async fn monitor_devices(
     config: Arc<Config>,
-    update_sender: mpsc::Sender<UpdateRequest>,
+    update_sender: mpsc::Sender<Action>,
 ) -> Result<()> {
     let (tx, mut rx) = mpsc::channel(5);
 

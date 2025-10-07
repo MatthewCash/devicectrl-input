@@ -1,11 +1,11 @@
 use anyhow::{Context, Result};
-use devicectrl_common::UpdateRequest;
 use sd_notify::NotifyState;
 use std::{env, path::PathBuf, sync::Arc};
 use tokio::{sync::mpsc, task::JoinSet};
 use tracing_subscriber::{EnvFilter, filter::LevelFilter};
 
 use crate::{
+    config::Action,
     devices::{listen_events, monitor_devices},
     transport::start_communication,
 };
@@ -34,7 +34,7 @@ async fn main() -> Result<()> {
         .context("failed to load config")?,
     );
 
-    let (sender, receiver) = mpsc::channel::<UpdateRequest>(64);
+    let (sender, receiver) = mpsc::channel::<Action>(64);
 
     let mut tasks = JoinSet::new();
 

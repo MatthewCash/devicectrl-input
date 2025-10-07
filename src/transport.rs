@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use devicectrl_common::{UpdateRequest, protocol::tcp::ServerBoundTcpMessage};
+use devicectrl_common::protocol::socket::ServerBoundSocketMessage;
 use futures::{SinkExt, TryStreamExt};
 use serde::{Deserialize, de};
 use serde_derive::Deserialize;
@@ -14,6 +14,8 @@ use tokio_rustls::{
     },
 };
 use tokio_util::codec::{Framed, LinesCodec};
+
+use crate::config::Action;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct ServerConnectionConfig {
@@ -39,7 +41,7 @@ where
 
 pub async fn connect_to_server(
     config: &ServerConnectionConfig,
-    receiver: &mut mpsc::Receiver<UpdateRequest>,
+    receiver: &mut mpsc::Receiver<Action>,
     connector: &TlsConnector,
 ) -> Result<()> {
     let connection = TcpStream::connect(config.server_addr).await?;
@@ -62,13 +64,15 @@ pub async fn connect_to_server(
 
     loop {
         select! {
-            update = receiver.recv() => {
-                log::debug!("sending update: {update:?}");
-                stream
-                    .send(serde_json::to_string(
-                        &ServerBoundTcpMessage::UpdateRequest(update.context("update channel closed")?),
-                    )?)
-                    .await?;
+            action = receiver.recv() => {
+                log::debug!("sending update: {action:?}");
+
+                let payload = match action.context("update channel closed")? {
+                    Action::Update(update) => ServerBoundSocketMessage::UpdateRequest(update),
+                    Action::ActivateScene(scene_id) => ServerBoundSocketMessage::ActivateScene(scene_id),
+                };
+
+                stream.send(serde_json::to_string(&payload)?).await?;
             }
             data = stream.try_next() => {
                 data.context("failed to recv message from server")?;
@@ -79,7 +83,7 @@ pub async fn connect_to_server(
 
 pub async fn start_communication(
     config: ServerConnectionConfig,
-    mut receiver: mpsc::Receiver<UpdateRequest>,
+    mut receiver: mpsc::Receiver<Action>,
 ) -> Result<()> {
     let mut root_store = RootCertStore::empty();
     root_store.add(CertificateDer::from_pem_slice(&config.server_ca_bytes)?)?;

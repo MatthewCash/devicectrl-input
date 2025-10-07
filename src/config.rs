@@ -1,5 +1,5 @@
 use anyhow::Result;
-use devicectrl_common::UpdateRequest;
+use devicectrl_common::{SceneId, UpdateRequest};
 use evdev::KeyCode;
 use serde::{Deserialize, de};
 use serde_derive::Deserialize;
@@ -26,9 +26,15 @@ where
 }
 
 #[derive(Clone, Debug, Deserialize)]
+pub enum Action {
+    Update(UpdateRequest),
+    ActivateScene(SceneId),
+}
+
+#[derive(Clone, Debug, Deserialize)]
 pub struct Config {
     pub server_connection: ServerConnectionConfig,
-    pub actions: Vec<(InputTrigger, Vec<UpdateRequest>)>,
+    pub actions: Vec<(InputTrigger, Vec<Action>)>,
 }
 
 pub async fn load_config(path: &Path) -> Result<Config> {
