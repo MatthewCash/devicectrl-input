@@ -21,29 +21,30 @@ Example:
             {
                 "key": "BTN_LEFT",
                 "value": 1,
-                "device_names": ["Kensington      Kensington USB/PS2 Orbit"]
+                "device_names": ["Kensington      Kensington USB Keyboard"]
             },
-            [
-                {
-                    "device_id": "lights",
-                    "change_to": { "LedStrip": { "brightness": 100 } }
-                }
-            ]
+            [{ "ActivateScene": "night" }]
         ],
         [
             {
                 "key": "KEY_LEFT",
                 "value": 1,
-                "device_names": ["Kensington      Kensington USB/PS2 Orbit"]
+                "device_names": ["Kensington      Kensington USB Keyboard"]
             },
             [
                 {
-                    "device_id": "switch",
-                    "change_to": { "Switch": { "power": true } }
+                    "Update": {
+                        "device_id": "switch",
+                        "change_to": { "Switch": "On" }
+                    }
                 },
                 {
-                    "device_id": "small-palmtree",
-                    "change_to": { "LedStrip": { "brightness": 1 } }
+                    "Update": {
+                        "device_id": "small-palmtree",
+                        "change_to": {
+                            "LedStrip": { "Brightness": { "Percent": 1 } }
+                        }
+                    }
                 }
             ]
         ]
